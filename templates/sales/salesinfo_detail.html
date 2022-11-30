@@ -1,0 +1,68 @@
+{% extends 'base.html' %} <!-- extends는 상속이라는 뜻 -->
+{% load humanize %}
+{% block content %}
+<hr align="center" width="30%">
+<h2 align="center" style="margin-top:20px;">{{ salesinfo.scode }}</h2>
+<!-- 제품 수정 버튼 시작 -->
+
+<div align="center">
+    <a href="{% url 'sales:salesinfo_modify' salesinfo.id %}" class="btn btn-sm btn-outline-secondary">판매 수정</a>
+    <a href="#" class="delete btn btn-sm btn-outline-secondary"
+       data-uri="{% url 'sales:salesinfo_delete' salesinfo.id %}">판매 삭제</a>
+</div>
+
+<!-- 제품 수정 버튼 끝 -->
+<hr align="center" width="30%"> <!-- 수평선 -->
+
+<div style="width:100%; height:150px; padding:50px;">
+    <table class="table">
+
+        <tr class="thead-light">
+            <th>키오스크코드</th>
+
+            <th>세부기능</th>
+            <th>판매일자</th>
+            <th>판매수량</th>
+            <th>판매금액</th>
+            <th>구매처 분류</th>
+            <th>상세주소</th>
+        </tr>
+        <tr>
+            <td>
+                {{ salesinfo.scode }}
+            </td>
+
+            <td>
+                {{ product.detailfunc|join:", " }}
+
+            </td>
+            <td>
+                {{ salesinfo.sale_date|date:'m월 d일 H:i' }}
+            </td>
+            <td>
+                {{ salesinfo.qty }}
+            </td>
+            <td>
+                {{ salesinfo.amt|intcomma }}
+            </td>
+            <td>
+                {{ salesinfo.main_inst }}
+            </td>
+            <td>
+                {{ salesinfo.detail_inst }}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %} <!-- extends는 상속이라는 뜻 -->
+{% load humanize %}
+{% block content %}
+<form action="{% url 'sales:salesinfo_index' %}" method="get" id="search_mode">
+    <div class="container my-3">
+        <select name="search_mode" id="search_mode">
+            <option value="">조회 선택</option>
+            <option value="공공">공공</option>
+            <option value="민간">민간</option>
+            <option value="무상a/s불가">무상a/s불가</option>
+        </select>
+    </div>
+</form>
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="text-center thead-light">
+            <th>번호</th>
+            <th>키오스크코드</th>
+            <th>판매일자</th>
+            <th>판매수량</th>
+            <th width="200" height="50">판매금액</th>
+            <th>구매처 분류</th>
+            <th>상세 주소</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% if sales_list %}
+                {% for sales in sales_list %}
+                <tr class="text-center">
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <a href="{% url 'sales:salesinfo_detail' sales.id %}">
+                            {{ sales.scode }}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{ sales.sale_date|date:'y년 m월 d일 H:i' }}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{ sales.qty|intcomma }}
+                        </a>
+                    </td>
+                    <td width="200" height="50">
+                        <a>
+                            {{ sales.amt|intcomma }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ sales.main_inst }}
+                    </td>
+                    <td class="text-truncate" style="max-width: 150px;">
+                        {{ sales.detail_inst }}
+                    </td>
+                    <td>
+                        {{ sales.author.username }}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <p>제품이 없습니다.</p>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+        <!-- 페이징 처리 시작 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전 페이지 -->
+        {% if sales_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ sales_list.previous_page_number }}"> <!-- sales_list가 page_obj -->
+                이전
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+                이전
+            </a>
+        </li>
+        {% endif %}
+        <!-- 페이지 리스트 -->
+        {% for page_number in sales_list.paginator.page_range %}
+        {% if page_number >= sales_list.number|add:-5 and page_number <= sales_list.number|add:5 %}
+            {% if page_number == sales_list.number %}
+            <li class="page-item active" aria-current="page" > <!-- active는 강조 표시 -->
+                <a class="page-link" href="?page={{ page_number }}">
+                    {{ page_number }}
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">
+                    {{ page_number }}
+                </a>
+            </li>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음 페이지 -->
+        {% if sales_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ sales_list.next_page_number }}">
+                다음
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+                다음
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- 페이징 처리 끝 -->
+    <a href="{% url 'sales:salesinfo_create' %}" class="btn text-white" style="background-color: #8396BC;">
+        판매 등록
+    </a>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("select[name=search_mode]").change(function () {
+        $("#search_mode").submit();
+
+        });
+    });
+</script>
+{% endblock %}

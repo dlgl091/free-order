@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">키오스크 등록</h5>
+    <form method="post" class="post-form my-3" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- 오류 표시 start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 오류 표시 end -->
+        <div class="form-group">
+            <label for="pcode">제품 코드</label>
+            <input type="text" class="form-control" name="pcode" id="pcode" value="{{ form.pcode.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="pname">제 품 명</label>
+            <textarea class="form-control" name="pname" id="pname" rows="1" placeholder="정확하게 입력해주세요.">{{ form.pname.value|default_if_none:'' }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="unitprice">단  가</label>
+            <input type="number" class="form-control" name="unitprice" id="unitprice" step="100" value="{{ form.unitprice.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="discountrate">할 인 율</label>
+            <input type="number" class="form-control" name="discountrate" id="discountrate" value="{{ form.discountrate.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="mainfunc">주요 기능</label>
+            <input type="text" class="form-control" name="mainfunc" id="mainfunc" placeholder="대표적인 기능 기재" value="{{ form.mainfunc.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="imgfile">제품사진 : </label>
+            <input type="file" class="form-control" name="imgfile" id="imgfile">
+        </div>
+        <div class="form-group">
+            <p for="detailfunc">상세 기능 :</p>
+
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="장애인 키패드">장애인 키패드</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="시각장애인 음성안내">시각장애인 음성안내</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="점자 라벨">점자 라벨</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="이어폰 소켓">이어폰 소켓</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="촉각 모니터">촉각 모니터</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="높이 조절">높이 조절</label></p>
+            <p><label><input type="checkbox" class="form-control2" name="detailfunc" value="화면 확대 기능">화면 확대 기능</label></p>
+            <p><input type="reset" value="Reset">
+        </div>
+        <button type="submit" class="btn text-white" style="background-color: #8396BC;">저장하기</button>
+    </form>
+</div>
+{% endblock %}
+

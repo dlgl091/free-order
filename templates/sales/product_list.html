@@ -1,0 +1,127 @@
+{% extends 'base.html' %} <!-- extends는 상속이라는 뜻 -->
+{% load humanize %}
+{% block content %}
+
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="text-center thead-light">
+            <th>번호</th>
+            <th>제품코드</th>
+            <th>제품명</th>
+            <th>단가</th>
+            <th>할인율</th>
+            <th width="200" height="50">주요기능</th>
+            <th width="120" height="50" align="center" valign="top" style="padding-top:15px;">이미지 유무</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% if product_list %}
+                {% for product in product_list %}
+            <tr class="text-center">
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    <a>
+                        {{ product.pcode}}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'sales:detail' product.id %}">
+                        {{ product.pname }}
+                    </a>
+                </td>
+                <td>
+                    <a>
+                        {{ product.unitprice|intcomma }}
+                    </a>
+                </td>
+                <td>
+                    <a>
+                        {{ product.discountrate }}
+                    </a>
+                </td>
+                <td width="200" height="50">
+                    <a>
+                        {{ product.mainfunc }}
+                    </a>
+                </td>
+                <td width="120" height="50" align="center" valign="top" style="padding-top:15px;">
+                    {% if product.imgfile %}
+                    <span class="badge badge-secondary py-1">
+                        ◯
+                    </span>
+                    {% else %}
+                    <span class="badge badge-warning py-1">
+                        ✕
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {{ product.author.username }}
+                </td>
+            </tr>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <p>제품이 없습니다.</p>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <!-- 페이징 처리 시작 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전 페이지 -->
+        {% if product_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ product_list.previous_page_number }}"> <!-- product_list가 page_obj -->
+                이전
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+                이전
+            </a>
+        </li>
+        {% endif %}
+        <!-- 페이지 리스트 -->
+        {% for page_number in product_list.paginator.page_range %}
+        {% if page_number >= product_list.number|add:-5 and page_number <= product_list.number|add:5 %}
+            {% if page_number == product_list.number %}
+            <li class="page-item active" aria-current="page" > <!-- active는 강조 표시 -->
+                <a class="page-link" href="?page={{ page_number }}">
+                    {{ page_number }}
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">
+                    {{ page_number }}
+                </a>
+            </li>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음 페이지 -->
+        {% if product_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ product_list.next_page_number }}">
+                다음
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">
+                다음
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- 페이징 처리 끝 -->
+    <a href="{% url 'sales:product_create' %}" class="btn text-white" style="background-color: #8396BC;">
+        제품 등록
+    </a>
+</div>
+
+{% endblock %}

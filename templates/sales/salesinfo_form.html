@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">키오스크 판매 등록</h5>
+    <form method="post" class="post-form my-3" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- 오류 표시 start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 오류 표시 end -->
+        <div class="form-group">
+            <label for="scode">판매 제품 코드</label>
+            <input type="text" class="form-control" name="scode" id="scode" value="{{ form.scode.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="sale_date">판매 일자</label>
+            <input type="date" name="sale_date" id="sale_date" min="2000-01-01">
+        </div>
+        <div class="form-group">
+            <label for="qty">판매 수량</label>
+            <input type="number" class="form-control" name="qty" id="qty" value="{{ form.qty.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="amt">판매 금액</label>
+            <input type="number" class="form-control" name="amt" id="amt" value="{{ form.amt.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="main_inst">구매처 분류</label>
+            <input type="text" class="form-control" name="main_inst" id="main_inst" placeholder="공공/민간" value="{{ form.main_inst.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="detail_inst">상세 주소</label>
+            <input type="text" class="form-control" name="detail_inst" id="detail_inst" placeholder="시/구/동까지 입력하세요" value="{{ form.detail_inst.value|default_if_none:'' }}">
+        </div>
+        <button type="submit" class="btn text-white" style="background-color: #8396BC;">저장하기</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!-- 내비게이션바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <a class="navbar-brand" href="{% url 'sales:map' %}">Kiosk Management System</a>
+    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+            data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">  <!-- 양쪽 정렬, id는 햄버거 버튼과 연동되어 있으니 꼭 삽입 -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'sales:index' %}">키오스크 조회</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'sales:salesinfo_index' %}">판매 조회</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">커뮤니티</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item align-self-center">
+                <!-- 로그인하면 내비게이션바에 로그아웃으로 뜨게 하기 -->
+                {% if user.is_authenticated %}
+                {{ user.username }}님, 안녕하세요! <!-- 로그인한 사용자명 -->
+                {% endif %}
+            </li>
+            <li class="nav-item">
+                {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'common:logout' %}">
+                    <button type="button" class="btn btn-warning">logout</button>
+                </a>
+                {% else %}
+                <a class="nav-link" href="{% url 'common:login' %}">
+                    <button type="button" class="btn btn-info btn-sm">login</button>
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</nav>

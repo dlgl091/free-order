@@ -1,0 +1,104 @@
+{% extends 'base.html' %} <!-- extends는 상속이라는 뜻 -->
+{% load humanize %}
+{% block content %}
+<hr align="center" width="30%">
+<h2 align="center" style="margin-top:20px;">{{ product.pcode }}</h2>
+<!-- 제품 수정 버튼 시작 -->
+{% if request.user == product.author %}
+<div align="center">
+    <a href="{% url 'sales:product_modify' product.id %}" class="btn btn-sm btn-outline-secondary">제품 수정</a>
+    <a href="#" class="delete btn btn-sm btn-outline-secondary"
+       data-uri="{% url 'sales:product_delete' product.id %}">제품 삭제</a>
+</div>
+{% endif %}
+<!-- 제품 수정 버튼 끝 -->
+<hr align="center" width="30%"> <!-- 수평선 -->
+{% if product.imgfile %}
+<div class="container border col-10">
+    <div style="width:10%; height:150px; float:left; margin-right:10px;">
+        <img src="{{ product.imgfile.url }}" width="700">
+    </div>
+    <div class="bktable">
+        <table class="detailta">
+            <tr class="detailtr">
+                <th class="detailth">키오스크코드</th>
+                <td>{{ product.pcode}}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">키오스크명</th>
+                <td>{{ product.pname }}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">단가</th>
+                <td>{{ product.unitprice|intcomma }}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">할인율</th>
+                <td>{{ product.discountrate }}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">대표 기능</th>
+                <td>{{ product.mainfunc }}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">세부 기능</th>
+                <td>{{ product.detailfunc }}</td>
+            </tr>
+            <tr class="detailtr">
+                <th class="detailth">작성자</th>
+                <td>{{ product.author.username }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% else %}
+<div style="width:100%; height:150px; padding:50px;">
+    <table class="table">
+
+        <tr class="thead-light">
+            <th>키오스크코드</th>
+            <th>키오스크명</th>
+            <th>단가</th>
+            <th>할인율</th>
+            <th>대표 기능</th>
+            <th>세부 기능</th>
+            <th>작성자</th>
+        </tr>
+        <tr>
+            <td>
+                {{ product.pcode}}
+            </td>
+            <td>
+                {{ product.pname }}
+            </td>
+            <td>
+                {{ product.unitprice|intcomma }}
+            </td>
+            <td>
+                {{ product.discountrate }}
+            </td>
+            <td>
+                {{ product.mainfunc }}
+            </td>
+            <td>
+                {{ product.detailfunc }}
+            </td>
+            <td>
+                {{ product.author.username }}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script type='text/javascript'>
+$(document).ready(function(){
+    $(".delete").on('click', function() {
+        if(confirm("정말로 삭제하시겠습니까?")) {
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,4 +1,5 @@
 .ideaz
 db.sqlite3
+*.png
 *.pyc
 __pycache__
